@@ -12,9 +12,9 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
 import com.google.android.material.snackbar.Snackbar
+import com.henry.firemessage.util.FirestoreUtil
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import org.jetbrains.anko.clearTask
-import org.jetbrains.anko.design.longSnackbar
 import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.newTask
@@ -52,8 +52,11 @@ class SignInActivity : AppCompatActivity() {
 
             if (resultCode == Activity.RESULT_OK) {
                 val progressDialog = indeterminateProgressDialog("Setting up your account")
-                startActivity(intentFor<MainActivity>().newTask().clearTask())
-                progressDialog.dismiss()
+
+                FirestoreUtil.initCurrentUserIfFirstTime {
+                    startActivity(intentFor<MainActivity>().newTask().clearTask())
+                    progressDialog.dismiss()
+                }
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 if (response == null) return
 

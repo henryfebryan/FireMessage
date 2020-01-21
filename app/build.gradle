@@ -6,6 +6,8 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'com.google.gms.google-services'
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -60,6 +62,12 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:21.3.1'
     implementation 'com.google.firebase:firebase-auth:19.2.0'
     implementation 'com.firebaseui:firebase-ui-auth:3.3.1'
+    implementation 'com.google.firebase:firebase-storage:19.1.0'
+    implementation 'com.firebaseui:firebase-ui-storage:3.3.1'
+
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    kapt 'com.github.bumptech.glide:compiler:4.9.0'
 
     implementation "androidx.cardview:cardview:1.0.0"
     implementation "androidx.legacy:legacy-support-v4:1.0.0"
