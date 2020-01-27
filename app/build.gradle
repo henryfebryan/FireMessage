@@ -64,10 +64,16 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-auth:3.3.1'
     implementation 'com.google.firebase:firebase-storage:19.1.0'
     implementation 'com.firebaseui:firebase-ui-storage:3.3.1'
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+    //implementation 'com.google.firebase:firebase-messaging:20.1.0'
 
     //glide
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     kapt 'com.github.bumptech.glide:compiler:4.9.0'
+
+    //groupie
+    implementation 'com.xwray:groupie:2.0.3'
+    implementation 'com.xwray:groupie-kotlin-android-extensions:2.0.3'
 
     implementation "androidx.cardview:cardview:1.0.0"
     implementation "androidx.legacy:legacy-support-v4:1.0.0"
@@ -78,5 +84,9 @@ dependencies {
         experimental {
             coroutines "enable"
         }
+    }
+
+    androidExtensions {
+        experimental = true
     }
 }
