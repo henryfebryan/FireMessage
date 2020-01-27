@@ -1,6 +1,6 @@
 package com.henry.firemessage.fragment
 
-
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.ListenerRegistration
+import com.henry.firemessage.AppConstants
+import com.henry.firemessage.ChatActivity
 
 import com.henry.firemessage.R
 import com.henry.firemessage.recyclerview.item.PersonItem
@@ -27,8 +29,10 @@ class PeopleFragment : Fragment() {
 
     private lateinit var peopleSection: Section
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         userListenerRegistration =
             FirestoreUtil.addUsersListener(this.activity!!, this::updateRecyclerView)
@@ -50,7 +54,7 @@ class PeopleFragment : Fragment() {
                 adapter = GroupAdapter<ViewHolder>().apply {
                     peopleSection = Section(items)
                     add(peopleSection)
-                    //setOnItemClickListener(onItemClick)
+                    setOnItemClickListener(onItemClick)
                 }
             }
             shouldInitRecyclerView = false
@@ -65,13 +69,13 @@ class PeopleFragment : Fragment() {
 
     }
 
-//    private val onItemClick = OnItemClickListener { item, view ->
-//        if (item is PersonItem) {
-//            startActivity<ChatActivity>(
-//                AppConstants.USER_NAME to item.person.name,
-//                AppConstants.USER_ID to item.userId
-//            )
-//        }
-//    }
-
+    private val onItemClick = OnItemClickListener { item, _ ->
+        if (item is PersonItem) {
+            startActivity(
+                Intent(context, ChatActivity::class.java)
+                    .putExtra(AppConstants.USER_NAME, item.person.name)
+                    .putExtra(AppConstants.USER_ID, item.userId)
+            )
+        }
+    }
 }
