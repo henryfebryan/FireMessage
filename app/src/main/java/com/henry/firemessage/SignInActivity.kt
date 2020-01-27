@@ -12,6 +12,8 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.iid.FirebaseInstanceId
+import com.henry.firemessage.service.MyFirebaseInstanceIDService
 import com.henry.firemessage.util.FirestoreUtil
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import org.jetbrains.anko.clearTask
@@ -55,6 +57,15 @@ class SignInActivity : AppCompatActivity() {
 
                 FirestoreUtil.initCurrentUserIfFirstTime {
                     startActivity(intentFor<MainActivity>().newTask().clearTask())
+
+                    FirebaseInstanceId.getInstance().instanceId
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val token = task.result!!.token
+                                MyFirebaseInstanceIDService.addTokenToFirestore(token)
+                            }
+                        }
+
                     progressDialog.dismiss()
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {

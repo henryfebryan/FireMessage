@@ -31,7 +31,7 @@ object FirestoreUtil {
             } else {
                 val newUser = User(
                     FirebaseAuth.getInstance().currentUser?.displayName ?: "",
-                    "", null
+                    "", null, mutableListOf()
                 )
 
                 currentUserDocRef.set(newUser).addOnSuccessListener {
@@ -76,8 +76,10 @@ object FirestoreUtil {
 
     fun removeListener(registration: ListenerRegistration) = registration.remove()
 
-    fun getOrCreateChatChannel(otherUserId: String,
-                               onComplete: (channelId: String) -> Unit) {
+    fun getOrCreateChatChannel(
+        otherUserId: String,
+        onComplete: (channelId: String) -> Unit
+    ) {
         currentUserDocRef.collection("engagedChatChannels")
             .document(otherUserId).get().addOnSuccessListener {
                 if (it.exists()) {
@@ -106,8 +108,10 @@ object FirestoreUtil {
             }
     }
 
-    fun addChatMessagesListener(channelId: String, context: Context,
-                                onListen: (List<Item>) -> Unit): ListenerRegistration {
+    fun addChatMessagesListener(
+        channelId: String, context: Context,
+        onListen: (List<Item>) -> Unit
+    ): ListenerRegistration {
         return chatChannelsCollectionRef
             .document(channelId)
             .collection("messages")
@@ -123,7 +127,12 @@ object FirestoreUtil {
                     if (it["type"] == MessageType.TEXT)
                         items.add(TextMessageItem(it.toObject(TextMessage::class.java)!!, context))
                     else
-                        items.add(ImageMessageItem(it.toObject(ImageMessage::class.java)!!, context))
+                        items.add(
+                            ImageMessageItem(
+                                it.toObject(ImageMessage::class.java)!!,
+                                context
+                            )
+                        )
                     return@forEach
                 }
                 onListen(items)
@@ -135,5 +144,18 @@ object FirestoreUtil {
             .collection("messages")
             .add(message)
     }
+
+    //region FCM
+    fun getFCMRegistrationTokens(onComplete: (tokens: MutableList<String>) -> Unit) {
+        currentUserDocRef.get().addOnSuccessListener {
+            val user = it.toObject(User::class.java)!!
+            onComplete(user.registrationTokens)
+        }
+    }
+
+    fun setFCMRegistrationTokens(registrationTokens: MutableList<String>) {
+        currentUserDocRef.update(mapOf("registrationTokens" to registrationTokens))
+    }
+    //endregion FCM
 
 }
