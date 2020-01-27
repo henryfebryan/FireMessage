@@ -51,7 +51,7 @@ class ChatActivity : AppCompatActivity() {
             currentChannelId = channelId
 
             messagesListenerRegistration =
-                FirestoreUtil.addChatMessagesListener(channelId, this, this::onMessageChanged)
+                FirestoreUtil.addChatMessagesListener(channelId, this, this::updateRecyclerView)
 
             imageView_send.setOnClickListener {
                 val messageToSend =
@@ -71,10 +71,6 @@ class ChatActivity : AppCompatActivity() {
                 startActivityForResult(Intent.createChooser(intent, "Select Image"), RC_SELECT_IMAGE)
             }
         }
-    }
-
-    private fun onMessageChanged(messages: List<Item>) {
-        toast("onMessageChangedRunning!")
     }
 
     @SuppressLint("MissingSuperCall")
